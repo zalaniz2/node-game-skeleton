@@ -1,0 +1,38 @@
+#renderer {
+	display: block;
+	margin: 20px auto 20px auto;
+	border: solid;
+	border-width: 4px;
+	border-color: darkgrey;
+}
+#chat{
+	display: block;
+	margin: 32px auto 32px auto;
+	border: solid;
+	border-width: 1px;
+	border-color: darkgrey;
+	height: 150px;
+	overflow-y: auto;
+	color: black;
+	font-weight: bold;
+}
+#chat #header{
+	padding-left: 10px;
+	padding-top: 10px;
+}
+#chat div{
+	padding-left: 10px;
+}
+#chatinput{
+	display: block;
+	margin: 10px;
+	border: solid;
+	border-width: 2px;
+	border-color: grey;
+	width: 75%;
+	text-align: left;
+	height: 30px;
+}
+#lobby p{
+	display: inline;
+}

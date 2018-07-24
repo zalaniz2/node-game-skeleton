@@ -1,0 +1,84 @@
+
+<link rel="stylesheet" href="/client/css/style.css">
+<div id="wrapper">
+  <canvas id="renderer" width="1200" height="400"></canvas>
+  <div id="chat">
+    <div id="header">Chat here <.></div>
+  </div>
+  <form id="chatform">
+    <input id="chatinput" type="text" placeholder="type your message here">
+  </form>
+  <div id="lobby">
+    <p id="lobby-list"></p>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script type="text/javascript">
+  var chatInput = document.getElementById("chatinput");
+  var chatForm = document.getElementById("chatform");
+  var chatBox = document.getElementById("chat");
+  var lobby = document.getElementById("lobby-list");
+
+  var socket = io();
+  var canvas = document.getElementById("renderer");
+  var context = canvas.getContext('2d');
+  context.font = "30px Arial";
+
+  socket.on("addToChat", function(data){
+    console.log(data.message);
+    chatBox.innerHTML += "<div>" + data.player + ": " + data.message + "</div>";
+  });
+
+  chatForm.onsubmit = function(event){
+    event.preventDefault();
+    socket.emit("sendMessageToServer", chatInput.value);
+    chatInput.value = ' ';
+  }
+
+  socket.on('newPositions', function(data){
+    context.clearRect(0,0,1200,400);
+    for( var i = 0; i<data.length; i++){
+      context.fillText(data[i].num, data[i].x, data[i].y);
+    }
+  });
+
+  socket.on("lobbylist", function(data){
+    lobby.innerHTML = 'In Lobby: ';
+    for(var i in data){
+      lobby.innerHTML += "<p>" + data[i].number + "</p>,   ";
+    }
+  });
+
+  document.onkeydown = function(event){
+    if( event.keyCode == 68){
+      socket.emit("keyPress", {id: 'right', state: true});
+    }
+    if( event.keyCode == 83){
+      socket.emit("keyPress", {id: 'down', state: true});
+    }
+    if( event.keyCode == 65){
+      socket.emit("keyPress", {id: 'left', state: true});
+    }
+    if( event.keyCode == 87){
+      socket.emit("keyPress", {id: 'up', state: true});
+    }
+  }
+
+  document.onkeyup = function(event){
+    if( event.keyCode == 68){
+      socket.emit("keyPress", {id: 'right', state: false});
+    }
+    if( event.keyCode == 83){
+      socket.emit("keyPress", {id: 'down', state: false});
+    }
+    if( event.keyCode == 65){
+      socket.emit("keyPress", {id: 'left', state: false});
+    }
+    if( event.keyCode == 87){
+      socket.emit("keyPress", {id: 'up', state: false});
+    }
+  }
+
+</script>
